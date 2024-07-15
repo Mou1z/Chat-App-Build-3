@@ -1,5 +1,5 @@
 ### Version Information
-This is an extension of the `Chat-App-Build-4`. It has been introduced in **Chapter 6** of the third section, belonging to the course "Introduction to Manual Testing & QA in Web Development".
+This is an extension of the `Chat-App-Build-2`. It has been introduced in **Chapter 6** of the third section, belonging to the course "Introduction to Manual Testing & QA in Web Development".
 
 In this version, some significant updates have been made to the application. Following is a summary of the changes:
 - The issues discovered by running the test cases in the previous task have now been fixed;
