@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatrooms</title>
+    <style>
+        body {
+            margin: 0;
+            margin-top: 2.5%;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 90%;
+            height: fit-content;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        form {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: calc(100% - 20px);
+            padding: 10px;
+            color: white;
+            background-color: #ff8a00;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #ff7a00;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            width: 100%;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        li form {
+            display: flex;
+            align-items: center;
+        }
+
+        li input[type="password"] {
+            margin-right: 10px;
+        }
+
+        li > div {
+            width: 100%;
+            text-align: left;
+        }
+
+    div > form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/profile">Profile Management</a>
+        <h1>Chatrooms</h1>
+        <form action="/create-chatroom" method="post">
+            <input type="text" name="name" placeholder="Chatroom Name" required>
+            <input type="password" name="password" placeholder="Password (optional)">
+            <button type="submit">Create Chatroom</button>
+        </form>
+        <ul>
+            <% chatrooms.forEach(function(chatroom) { %>
+                <li>
+                    <div>
+                        <p>Room Name: <%= chatroom.name %></p>
+                        <p>Room ID: <%= chatroom.id %></p>
+                        <form action="/join-chatroom" method="post">
+                            <input type="hidden" name="chatroomId" value="<%= chatroom.id %>">
+                            <% if (chatroom.password) { %>
+                                <input type="password" name="password" placeholder="Password" required>
+                            <% } %>
+                            <button type="submit">Join</button>
+                        </form>
+                    </div>
+                </li>
+            <% }); %>
+        </ul>
+    </div>
+</body>
+</html>

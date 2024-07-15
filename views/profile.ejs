@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profile Management</title>
+    <link href="css/main.css" rel="stylesheet">
+</head>
+<style>
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    a {
+        margin: 10px;
+        text-decoration: underline;
+    }
+
+    #pfp {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        margin-bottom: 30px;
+    }
+</style>
+<body>
+    <div class="container">
+        <h1>Profile Management</h1>
+        <form id="profile-form" action="/profile" method="POST" enctype="multipart/form-data">
+            <label for="username">New Username</label>
+            <input type="text" id="username" name="username" value="<%= user.username %>" required>
+            <label for="email">New Email</label>
+            <input type="email" id="email" name="email" value="<%= user.email %>" required>
+            <label for="password">New Password</label>
+            <input type="password" id="password" name="password">
+            <div id="pfp">
+                <label for="profile_picture">New Profile Picture </label>
+                <input type="file" id="profile_picture" name="profile_picture">
+            </div>
+            <button type="submit">Update Profile</button>
+        </form>
+        <div>
+            <p>User Token: <%= user.token %></p>
+        </div>
+    </div>
+    <a href="/chatrooms">Go back to Chatrooms</a>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+        }
+
+
+        .container {
+            width: 90%;
+            height: 90%;   
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #chat-container {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+
+            height: 60%;
+            width: calc(100% - 20px);
+            
+            padding: 10px;
+            margin-bottom: 20px;
+
+            text-align: left;
+
+            overflow-y: scroll;
+        }
+
+        form {
+            width: 100%;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 20px); /* Adjust for input padding */
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: calc(100% - 20px);
+            padding: 10px;
+            color: white;
+            background-color: #ff8a00;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #ff7a00;
+        }        
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        a {
+            margin: 10px;
+            text-decoration: underline;
+            color: #ff8a00;
+        }
+
+        .chat-img {
+            width: 100%;
+            height: auto;
+        }
+
+        .chat-img-container {
+            margin: 5px;
+            margin-right: 7px;
+            border-radius: 50px;
+            width: 50px;
+            height: 50px;
+            overflow: hidden;
+        }
+
+        .chat-message {
+            margin: 5px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+    </style>
+
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Chat App</h1>
+        <div id="chat-container">
+            <% chatHistory.forEach(function(message) { %>
+                <div class="chat-message">
+                    <% if (message.sender_profile_picture) { %>
+                        <div class="chat-img-container">
+                            <img class="chat-img" src="<%= message.sender_profile_picture %>" alt="Profile Picture" width="30" height="30">
+                        </div>
+                    <% } %>
+                    <p><%= message.sender %>: <%= message.content %></p>
+                </div>
+            <% }); %>
+        </div>
+        <form id="message-form">
+            <input type="text" id="message-input" placeholder="Type your message...">
+            <button type="submit">Send</button>
+        </form>
+    </div>
+    <a href="/chatrooms">Go back to Chatrooms</a>
+</body>
+<script>
+    var socket = io();
+
+    let form = document.querySelector('#message-form');
+    let input = document.querySelector('#message-input');
+    let messages = document.querySelector('#chat-container');
+
+    let addMessage = (msg) => {
+        var item = document.createElement('div');
+        item.className = 'chat-message';
+        if (msg.senderProfilePicture) {
+            var imgdiv = document.createElement('div');
+            var img = document.createElement('img');
+            img.src = msg.senderProfilePicture;
+            img.alt = "Profile Picture";
+            img.width = 30;
+            img.height = 30;
+            img.className = 'chat-img';
+            imgdiv.className = 'chat-img-container';
+            imgdiv.appendChild(img);
+            item.appendChild(imgdiv);
+        }
+        var text = document.createElement('span');
+        text.textContent = msg.sender + ': ' + msg.content;
+        item.appendChild(text);
+        messages.appendChild(item);
+        messages.scrollTop = messages.scrollHeight; 
+    }
+
+    let username = '<%= username %>';
+    let chatroomId = '<%= chatroomId %>';
+    let profilePicture = '<%= profile_picture %>';
+
+    socket.emit('join room', chatroomId);
+
+    messages.scrollTo(0, messages.scrollHeight);
+
+    form.addEventListener('submit', function(e) {
+        if (input.value) {
+            e.preventDefault();
+            socket.emit('chat message', 
+                {
+                    sender: username,
+                    content: input.value,
+                    chatroomId: chatroomId,
+                    senderProfilePicture: profilePicture
+                }
+            );
+            input.value = '';
+        }
+    });
+
+    socket.on('chat message', function(msg) {
+        addMessage(msg);
+        messages.scrollTo(0, messages.scrollHeight);
+    });
+</script>
+</html>
